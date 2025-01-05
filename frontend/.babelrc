@@ -1,0 +1,7 @@
+{
+    "presets": [
+      "@babel/preset-env",   // Biên dịch mã JavaScript hiện đại (ES6+)
+      "@babel/preset-react"  // Biên dịch JSX
+    ]
+  }
+  

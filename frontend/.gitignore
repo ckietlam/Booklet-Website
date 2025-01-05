@@ -1,0 +1,27 @@
+# Node modules
+/node_modules/
+
+# Build directories
+/dist/
+/build/
+
+# .env file
+/.env
+
+# IDE config files
+/.idea/
+/.vscode/
+/*.sublime-workspace
+/*.sublime-project
+
+# Logs
+*.log
+
+# Temporary files
+*.cache
+*.tmp
+*.swp
+
+# Production build files
+*.tgz
+*.tar.gz
