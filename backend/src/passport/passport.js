@@ -1,7 +1,8 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+
+import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_CLIENT_SECRET } from '../config.js';
 import User from '../models/User.js';
-import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_CLIENT_SECRET, GOOGLE_AUTH_REDIRECT_URL } from '../config.js';
 
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_AUTH_CLIENT_ID,

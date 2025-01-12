@@ -1,16 +1,20 @@
-// app.js
-import express from 'express';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
-import passport from 'passport';
 import cors from 'cors';
+import express from 'express';
+import mongoose from 'mongoose';
 import morgan from 'morgan';
+import passport from 'passport';
+
 import './passport/passport.js';
-import initWebRouters from "./routes/web.js";
 import { config, __viewsDir } from './config.js';
+import initWebRouters from "./routes/web.js";
 
 const app = express();
-
+if (typeof process !== 'undefined') {
+  console.log('process exists');
+} else {
+  console.log('process does not exist');
+}
 // Middleware
 app.set('views', __viewsDir);
 console.log(__viewsDir);
@@ -39,6 +43,7 @@ mongoose
     app.listen(config.app.port, () => {
       console.log(`Backend Nodejs is running on the port: ${config.app.port}`);
     });
+    return null;  
   })
   .catch((error) => {
     console.log(error);
