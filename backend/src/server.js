@@ -1,51 +1,50 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-require('dotenv').config();
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import express from 'express';
+import mongoose from 'mongoose';
+import morgan from 'morgan';
+import passport from 'passport';
+
+import './passport/passport.js';
+import { config, __viewsDir } from './config.js';
+import initWebRouters from "./routes/web.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
-
+if (typeof process !== 'undefined') {
+  console.log('process exists');
+} else {
+  console.log('process does not exist');
+}
 // Middleware
-app.use(bodyParser.json());
+app.set('views', __viewsDir);
+console.log(__viewsDir);
+app.set('view engine', 'ejs');
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-// Mongoose Task Model
-const taskSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    description: { type: String, required: true }
-});
+// CORS configuration
+app.use(cors({
+    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    credentials: true
+}));
+app.use(morgan('dev'));
 
-const Task = mongoose.model('Task', taskSchema);
+// Initialize passport
+app.use(passport.initialize());
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+// Initialize routes
+initWebRouters(app);
 
-
-mongoose.connect('mongodb://localhost:27017');
-
-app.post('/tasks', async (req, res) => {
-    try {
-        const { title, description } = req.body;
-        const newTask = new Task({ title, description });
-        await newTask.save();
-        res.status(201).json(newTask);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
-
-
-app.get('/tasks', async (req, res) => {
-    try {
-        const tasks = await Task.find();
-        res.status(200).json(tasks);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-});
-
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+// MongoDB Connection
+mongoose
+  .connect(config.db.mongoDBURL)
+  .then(() => {
+    console.log('App connected to database');
+    app.listen(config.app.port, () => {
+      console.log(`Backend Nodejs is running on the port: ${config.app.port}`);
+    });
+    return null;  
+  })
+  .catch((error) => {
+    console.log(error);
+  });
