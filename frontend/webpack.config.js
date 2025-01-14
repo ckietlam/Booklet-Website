@@ -4,8 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: './src/index.js', // Entry point của ứng dụng (tệp đầu tiên React sẽ chạy)
   output: {
-    path: path.resolve(__dirname, 'dist'), // Tạo tệp đóng gói trong thư mục dist
-    filename: 'bundle.js', // Tên tệp output
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
   },
   module: {
     rules: [
