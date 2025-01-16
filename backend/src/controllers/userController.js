@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 import passport from "passport";
 
+import otpService from "../services/otpService.js";
 import userService from "../services/userService.js";
 
 
@@ -54,7 +56,7 @@ const postLogin = async (req, res) => {
       { expiresIn: "12h" }
     );
     console.log(token,  currentUser._id, currentUser.username );
-    return res.status(200).json({ token, username: currentUser.username });
+    return res.status(200).json({ token, username: currentUser.username, profilePicture: currentUser.profilePicture });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -88,6 +90,66 @@ const getIsAuthenticated = (req, res) => {
       user: req.user,
     });
 };
+
+const handleForgotPassword = async (req, res) => {
+    try {
+      const { email } = req.body;
+  
+      if (!email) {
+        return res.status(400).json({
+          message: "Missing email",
+          userEmail: "" 
+        });
+      }
+  
+      const user = await userService.checkUserEmail(email);
+      if (!user) {
+        return res.status(404).render("pages/forgot-password", {
+          message: "User not found",
+          userEmail: "" 
+        });
+      }
+  
+      const otp = otpService.generateOtp();
+      await otpService.saveOtp(email, otp);
+  
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        port: 465,
+        secure: true,
+        logger: true,
+        debug: true,
+        secureConnection: false,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+        tls: {
+          rejectUnauthorized: true,
+        },
+      });
+  
+      const mailOptions = {
+        from: "process.env.EMAIL_USER",
+        to: email,
+        subject: "Password Reset OTP",
+        text: `Your OTP for password reset is ${otp}`,
+      };
+  
+      await transporter.sendMail(mailOptions);
+      
+      return res.status(200).render("pages/change-password", {
+        message: `OTP sent to your email: ${email}`, 
+        userEmail: email 
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Error from server",
+        error: error.message,
+        userEmail: "" 
+      });
+    }
+  };
 export default {
   getLogin,
   postSignup,

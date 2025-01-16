@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 
-import {User} from "../models/Index.js";
+import {User} from "../models/User.js";
 
 const checkEmail = async (EMAIL) => {
     const checkUser = await User.findOne({ email: EMAIL });
@@ -34,6 +34,8 @@ const createUser = async ({ email, username, password }) => {
     const newUser = new User({ email, username, password: hashedPassword });
     await newUser.save();
 }
+
+
 
 export default {
     checkEmail,
