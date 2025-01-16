@@ -102,11 +102,10 @@ const handleForgotPassword = async (req, res) => {
         });
       }
   
-      const user = await userService.checkUserEmail(email);
-      if (!user) {
-        return res.status(404).render("pages/forgot-password", {
+      const user = await userService.checkEmail(email);
+      if (user === false) {
+        return res.status(400).json({
           message: "User not found",
-          userEmail: "" 
         });
       }
   
@@ -158,5 +157,6 @@ export default {
   getGoogleCallback,
   getGoogleCallbackJWT,
   getSuccess,
-  getIsAuthenticated
+  getIsAuthenticated,
+    handleForgotPassword,
 };
