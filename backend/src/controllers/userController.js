@@ -40,6 +40,7 @@ const postSignup = async (req, res) => {
 const postLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("User:", email, password);
     const currentUser = await userService.checkPassword(password, email);
     console.log(currentUser);
     if (currentUser === null) {
