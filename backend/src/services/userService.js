@@ -12,8 +12,16 @@ const checkEmail = async (EMAIL) => {
 
 const checkPassword = async (PASSWORD, EMAIL ) => {
     console.log('Searching for:', EMAIL, PASSWORD);
-    const currentUser = await User.findOne ({ email: EMAIL });
+    const currentUser = await User.findOne({ email: EMAIL });
+    const users = await User.find(); // Fetch all users
+    console.log("List of all users in the database (emails):", users.map(user => user.email));
+    if (!currentUser) {
+        console.log('No user found');
+        return null; 
+    }
     const checkUser = bcrypt.compareSync(PASSWORD, currentUser.password);
+    console.log('Check user:', checkUser);
+    console.log('Check user:', checkUser);
     if (!checkUser) {
         return null;
     }

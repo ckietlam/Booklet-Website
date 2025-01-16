@@ -1,12 +1,30 @@
 import React, { useState } from 'react';
+import { login, googleAuth } from "../utils/api"; // Import googleAuth correctly
+import { useNavigate } from "react-router-dom";
 
 const SignIn = ({ isOpen, close, switchToSignUp }) => {
-  if (!isOpen) return null;  // Nếu không mở thì không render gì cả
+  const [email, setEmail] = useState(""); // Quản lý trạng thái cho email
+  const [password, setPassword] = useState(""); // Quản lý trạng thái cho password
+  const [showPassword, setShowPassword] = useState(false); // Ban đầu ẩn mật khẩu
+  const [error, setError] = useState(null); // Xử lý lỗi
+  const navigate = useNavigate();
 
-  const [showPassword, setShowPassword] = useState(false);  // Ban đầu ẩn mật khẩu (sử dụng type="password")
+  if (!isOpen) return null; // Nếu không mở thì không render gì cả
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);  // Đổi trạng thái khi nhấn vào icon
+    setShowPassword(!showPassword); // Đổi trạng thái khi nhấn vào icon
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
+    try {
+      const { data } = await login(email, password); // Gọi API đăng nhập từ utils/api.js
+      localStorage.setItem("token", data.token);
+      navigate("/"); 
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to login");
+    }
   };
 
   return (
@@ -16,37 +34,46 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
           <h2 className="text-2xl font-bold">Sign In</h2>
           <button onClick={close} className="text-white text-2xl">×</button>
         </div>
-        <form className="mt-4">
-          <label className="block mb-2">Username</label>
-          <input type="text" className="w-full p-2 mb-4 text-gray-800" placeholder="Enter your username" />
+        <form className="mt-4" onSubmit={handleLogin}>
+          {/* Hiển thị thông báo lỗi */}
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          
+          <label className="block mb-2">Email</label>
+          <input
+            type="email"
+            className="w-full p-2 mb-4 text-gray-800"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)} // Điều khiển giá trị email
+          />
           
           <label className="block mb-2">Password</label>
           <div className="relative">
-            <input 
-              type={showPassword ? "text" : "password"} 
-              className="w-full p-2 mb-4 text-gray-800" 
-              placeholder="Enter your password" />
-            {/* Icon show/hide password */}
-            <img 
-              src={`/assets/icons/${showPassword ? "hide" : "show"}.svg`} 
-              alt="Toggle visibility" 
-              onClick={togglePasswordVisibility} 
-              className="absolute right-3 top-1/3 transform -translate-y-1/2 cursor-pointer w-6 h-6 text-gray-800 mb-10" 
+            <input
+              type={showPassword ? "text" : "password"}
+              className="w-full p-2 mb-4 text-gray-800"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Điều khiển giá trị password
+            />
+            {/* Icon hiện/ẩn mật khẩu */}
+            <img
+              src={`/assets/icons/${showPassword ? "hide" : "show"}.svg`}
+              alt="Toggle visibility"
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 top-1/3 transform -translate-y-1/2 cursor-pointer w-6 h-6"
             />
           </div>
 
-          
-          <div className="flex items-center mb-4">
-            <input type="checkbox" className="mr-2" />
-            <span>Remember me</span>
-          </div>
-
-          <button className="w-full py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600 transition-all duration-300">
-            Sign In
+          <button
+            type="submit"
+            className="w-full py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600 transition-all duration-300"
+          >
+            Login
           </button>
 
           <div className="mt-4 text-center">
-            <a href="#" className="text-blue-300">Forgot password or username?</a>
+            <a href="#" className="text-blue-300">Forgot password?</a>
           </div>
 
           <div className="mt-2 text-center">
@@ -62,10 +89,18 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
             <div className="w-full border-t border-gray-300"></div>
           </div>
 
-          {/* Nút "Sign Up With Google" */}
-          <button className="w-full py-2 bg-white text-black font-semibold rounded-full flex items-center justify-center mt-4 border-2 border-gray-300 hover:bg-gray-100">
-            <img src="/assets/icons/google.svg" alt="Google Logo" className="h-6 mr-2" />  {/* Thay path_to_google_logo.svg bằng đường dẫn thật đến logo Google */}
-            Sign In With Google
+          {/* Nút "Sign In With Google" */}
+          <button
+            type="button"
+            className="w-full py-2 bg-white text-black font-semibold rounded-full flex items-center justify-center mt-4 border-2 border-gray-300 hover:bg-gray-100"
+            onClick={googleAuth} 
+          >
+            <img
+              src="/assets/icons/google.svg"
+              alt="Google Logo"
+              className="h-6 mr-2"
+            />
+            Login via Google
           </button>
         </form>
       </div>
