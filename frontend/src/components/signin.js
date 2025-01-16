@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { login, googleAuth } from "../utils/api"; // Import googleAuth correctly
-import { useNavigate } from "react-router-dom";
 import ForgotPass from './forgot-pass'; // Import ForgotPass component
 
 const SignIn = ({ isOpen, close, switchToSignUp }) => {
@@ -9,7 +8,6 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
   const [showPassword, setShowPassword] = useState(false); // Ban đầu ẩn mật khẩu
   const [error, setError] = useState(null); // Xử lý lỗi
   const [isForgotPassOpen, setIsForgotPassOpen] = useState(false); // Xử lý modal quên mật khẩu
-  const navigate = useNavigate();
 
   if (!isOpen) return null; // Nếu không mở thì không render gì cả
 
@@ -22,12 +20,15 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
     setError(null);
     try {
       const { data } = await login(email, password); // Gọi API đăng nhập từ utils/api.js
-      localStorage.setItem("token", data.token);
-      navigate("/"); 
+      localStorage.setItem("token", data.token);  // Lưu token vào localStorage
+      localStorage.setItem("username", data.username);  // Lưu username vào localStorage (hoặc email)
+      localStorage.setItem("profilePicture", data.profilePicture);  // Lưu ảnh đại diện vào localStorage
+      window.location.reload();
     } catch (err) {
       setError(err.response?.data?.error || "Failed to login");
     }
   };
+  
 
   const openForgotPass = () => {
     setIsForgotPassOpen(true);
@@ -123,6 +124,7 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
         
         {/* Modals */}
         <ForgotPass isOpen={isForgotPassOpen} close={closeForgotPass} switchToSignIn={switchToSignUp} />
+
       </div>
     </div>
   );
