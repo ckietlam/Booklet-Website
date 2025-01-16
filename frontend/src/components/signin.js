@@ -69,11 +69,11 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
             type="submit"
             className="w-full py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600 transition-all duration-300"
           >
-            Login
+            Sign In
           </button>
 
           <div className="mt-4 text-center">
-            <a href="#" className="text-blue-300">Forgot password?</a>
+            <a href="#" className="text-blue-300">Forgot Password?</a>
           </div>
 
           <div className="mt-2 text-center">
@@ -100,7 +100,7 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
               alt="Google Logo"
               className="h-6 mr-2"
             />
-            Login via Google
+            Sign In with Google
           </button>
         </form>
       </div>

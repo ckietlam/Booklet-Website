@@ -25,7 +25,7 @@ const SidebarMenu = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-4 bg-white w-48 h-screen border-r-4 border-black">
+    <div className="flex flex-col items-center p-4 bg-white w-48.1 h-screen border-r-4 border-black">
       {/* Cụm Sign In / Sign Up */}
       <button
         onClick={openSignIn}
@@ -45,7 +45,7 @@ const SidebarMenu = () => {
       <hr className="w-full my-4 border-gray-300 border-1.5" />
 
       {/* Các button còn lại */}
-      <button className="mb-4 px-6 py-2 text-white font-bold bg-gradient-to-r from-yellow-400 to-red-500 rounded-full hover:from-yellow-500 hover:to-red-600 focus:outline-none font-lora transition-all duration-300">
+      <button className="mt-3 mb-5 px-6 py-3 text-white font-bold bg-gradient-to-r from-yellow-400 to-red-500 rounded-full hover:from-yellow-500 hover:to-red-600 focus:outline-none font-lora transition-all duration-300">
         Premium
       </button>
       <button className="mb-4 px-6 py-2 text-black font-bold bg-transparent border-2 border-transparent hover:bg-gray-100 hover:border-gray-300 rounded-full font-lora transition-all duration-300">
