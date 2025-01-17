@@ -9,13 +9,14 @@ const router = Router();
 
 
 const initWebRouters = (app) => {
-    router.get('/login', user.getLogin);
     router.post('/signup', user.postSignup);
     router.post('/login', user.postLogin);
     router.get('/google', user.getGoogle);
     router.get('/google/callback', user.getGoogleCallback, user.getGoogleCallbackJWT);
     router.get('/success', user.getSuccess);
     router.get('/isAuthenticated', verifyToken, user.getIsAuthenticated);
+    router.post('/forgot-password', user.handleForgotPassword);
+    router.post('/reset-password', user.handleResetPassword);
 
 
   return app.use("/", router);

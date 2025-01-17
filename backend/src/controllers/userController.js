@@ -1,14 +1,13 @@
+
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import passport from "passport";
 
+import {EMAIL_USER, PASS_USER} from "../config.js";
 import otpService from "../services/otpService.js";
 import userService from "../services/userService.js";
 
 
-const getLogin = (req, res) => {
-  res.render("Login");
-};
 
 const postSignup = async (req, res) => {
   try {
@@ -19,18 +18,16 @@ const postSignup = async (req, res) => {
         message: "Missing required parameters",
       });
     }
-    console.log("User:", username, email, password);
-    // Find the user in the database
+
     const isExist = await userService.checkEmail(email);
-    console.log(isExist);
 
     if (isExist) {
       return res.status(400).json({
         message: "Email already exists",
       });
     }
-
-    const user = await userService.createUser({ email, username, password });
+    const otp = otpService.generateOtp();
+    const user = await userService.createUser({ email, username, password, otp });
 
     res.status(201).json({ message: "User created successfully" });
     return user;
@@ -120,8 +117,8 @@ const handleForgotPassword = async (req, res) => {
         debug: true,
         secureConnection: false,
         auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
+          user: EMAIL_USER,
+          pass: PASS_USER,
         },
         tls: {
           rejectUnauthorized: true,
@@ -129,7 +126,7 @@ const handleForgotPassword = async (req, res) => {
       });
   
       const mailOptions = {
-        from: "process.env.EMAIL_USER",
+        from: "EMAIL_USER",
         to: email,
         subject: "Password Reset OTP",
         text: `Your OTP for password reset is ${otp}`,
@@ -137,7 +134,7 @@ const handleForgotPassword = async (req, res) => {
   
       await transporter.sendMail(mailOptions);
       
-      return res.status(200).render("pages/change-password", {
+      return res.status(200).json({
         message: `OTP sent to your email: ${email}`, 
         userEmail: email 
       });
@@ -149,8 +146,42 @@ const handleForgotPassword = async (req, res) => {
       });
     }
   };
+
+const handleResetPassword = async (req,res) => {
+    try {
+        const { email, otp, password } = req.body;
+        if (!email || !otp || !password) {
+        return res.status(400).json({
+            message: "Missing required parameters",
+        });
+        }
+        const checkUser = await userService.checkEmail(email);
+        if (checkUser === false) {
+        return res.status(400).json({
+            message: "User not found",
+        });
+        }
+
+        const user = await userService.checkOtp(email, otp);
+        
+        if (user === null) {
+        return res.status(400).json({
+            message: "Invalid OTP",
+        });
+        }
+        await userService.changePassword(email, password);
+
+        return res.status(200).json({
+        message: "Password updated successfully",
+        });
+    } catch (error) {
+        return res.status(500).json({
+        message: "Error from server",
+        error: error.message,
+        });
+    }
+    }
 export default {
-  getLogin,
   postSignup,
   postLogin,
   getGoogle,
@@ -158,5 +189,7 @@ export default {
   getGoogleCallbackJWT,
   getSuccess,
   getIsAuthenticated,
-    handleForgotPassword,
+  handleForgotPassword,
+  handleResetPassword
+
 };

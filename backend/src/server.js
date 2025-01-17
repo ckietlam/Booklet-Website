@@ -2,7 +2,6 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
-import morgan from 'morgan';
 import passport from 'passport';
 
 import './passport/passport.js';

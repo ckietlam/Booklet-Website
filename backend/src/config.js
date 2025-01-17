@@ -23,11 +23,16 @@ const __viewsDir = path.join(__dirname, './view');
 const GOOGLE_AUTH_CLIENT_ID = process.env.GOOGLE_AUTH_CLIENT_ID;
 const GOOGLE_AUTH_CLIENT_SECRET = process.env.GOOGLE_AUTH_CLIENT_SECRET;
 const GOOGLE_AUTH_REDIRECT_URL = process.env.GOOGLE_AUTH_REDIRECT_URL;
+const EMAIL_USER = process.env.EMAIL_USER;
+const PASS_USER = process.env.EMAIL_PASS;
 
+console.log(EMAIL_USER, PASS_USER);
 export {
   config,
   __viewsDir,
   GOOGLE_AUTH_CLIENT_ID,
   GOOGLE_AUTH_CLIENT_SECRET,
-  GOOGLE_AUTH_REDIRECT_URL
+  GOOGLE_AUTH_REDIRECT_URL,
+  EMAIL_USER,
+  PASS_USER,
 };
