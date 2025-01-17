@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { signup } from '../utils/api';
 
 const SignUp = ({ isOpen, close, switchToSignIn }) => {
   const [username, setUsername] = useState(""); // Quản lý trạng thái cho Username
@@ -12,14 +13,21 @@ const SignUp = ({ isOpen, close, switchToSignIn }) => {
     setShowPassword(!showPassword);  // Đổi trạng thái khi nhấn vào icon
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
     setError("");
-    // Tiến hành đăng ký ở đây (API call)
+    try {
+      await signup(username, email, password);
+      switchToSignIn();
+    }
+    catch (err) {
+      console.log(err.response.data.message);
+      setError(err.response.data.message || "Failed to sign up");
+    }
   };
 
   if (!isOpen) return null;  // Nếu không mở thì không render gì cả

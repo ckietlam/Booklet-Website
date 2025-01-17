@@ -25,7 +25,7 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
       localStorage.setItem("profilePicture", data.profilePicture);  // Lưu ảnh đại diện vào localStorage
       window.location.reload();
     } catch (err) {
-      setError(err.response?.data?.error || "Failed to login");
+      setError(err.response.data.message || "Failed to login");
     }
   };
   
