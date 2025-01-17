@@ -1,32 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import SignIn from './signin';  // Import SignIn component
-import SignUp from './signup';  // Import SignUp component
+import React, { useState, useEffect } from "react";
+import SignIn from "./signin"; // Import SignIn component
+import SignUp from "./signup"; // Import SignUp component
+import ForgotPass from "./forgot-pass"; // Import ForgotPass component
+import ChangePassword from "./changePassword";
 
 const SidebarMenu = () => {
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
-  const [username, setUsername] = useState(null);  // Trạng thái cho username
-  const [profilePicture, setProfilePicture] = useState(null);  // Trạng thái cho profile picture
+  const [isForgotPassOpen, setIsForgotPassOpen] = useState(false); // Forgot Password modal state
+  const [isChangePassOpen, setIsChangePassOpen] = useState(false); // Change Password modal state
+  const [username, setUsername] = useState(null); // State for username
+  const [profilePicture, setProfilePicture] = useState(null); // State for profile picture
 
   useEffect(() => {
-    const savedUsername = localStorage.getItem("username");  // Lấy username từ localStorage
-    console.log(savedUsername, savedProfilePicture);
+    const savedUsername = localStorage.getItem("username"); // Retrieve username from localStorage
+    const savedProfilePicture = localStorage.getItem("profilePicture"); // Retrieve profile picture from localStorage
 
-    const savedProfilePicture = localStorage.getItem("profilePicture");  // Lấy profile picture từ localStorage
-    console.log(savedUsername, savedProfilePicture);
-
-    if (savedUsername) {
-      setUsername(savedUsername);  // Nếu có, lưu vào state
-    }
-
-    if (savedProfilePicture) {
-      setProfilePicture(savedProfilePicture);  // Nếu có, lưu vào state
-    }
+    if (savedUsername) setUsername(savedUsername); // Save to state
+    if (savedProfilePicture) setProfilePicture(savedProfilePicture); // Save to state
   }, []);
 
   const openSignIn = () => {
     setIsSignInOpen(true);
-    setIsSignUpOpen(false);  // Đảm bảo Sign Up được đóng khi mở Sign In
+    setIsSignUpOpen(false); // Close Sign Up when opening Sign In
+    setIsForgotPassOpen(false); 
+    setIsChangePassOpen(false);// Ensure Forgot Password modal is closed
   };
 
   const closeSignIn = () => {
@@ -35,38 +33,54 @@ const SidebarMenu = () => {
 
   const openSignUp = () => {
     setIsSignUpOpen(true);
-    setIsSignInOpen(false);  // Đảm bảo Sign In được đóng khi mở Sign Up
+    setIsSignInOpen(false); // Close Sign In when opening Sign Up
+    setIsForgotPassOpen(false); // Ensure Forgot Password modal is closed
   };
 
   const closeSignUp = () => {
     setIsSignUpOpen(false);
   };
 
+  const openForgotPass = () => {
+    setIsForgotPassOpen(true);
+    setIsSignInOpen(false); // Ensure Sign In modal is closed
+    setIsSignUpOpen(false); // Ensure Sign Up modal is closed
+  };
+
+  const closeForgotPass = () => {
+    setIsForgotPassOpen(false);
+  };
+
+  const openChangePass = () => {
+    setIsChangePassOpen(true);
+    setIsSignInOpen(false);
+    setIsSignUpOpen(false);
+    setIsForgotPassOpen(false);
+  };
+
+  const closeChangePass = () => setIsChangePassOpen(false);
+
   const handleSignOut = () => {
-    localStorage.removeItem("token");  // Xóa token và username khi đăng xuất
+    localStorage.removeItem("token"); // Remove token and username on sign out
     localStorage.removeItem("username");
     localStorage.removeItem("profilePicture");
-    setUsername(null);  // Xóa username khỏi state
-    setProfilePicture(null);  // Xóa ảnh profile khỏi state
+    setUsername(null); // Clear username from state
+    setProfilePicture(null); // Clear profile picture from state
   };
 
   return (
     <div className="flex flex-col items-center p-4 bg-white w-48.1 h-screen border-r-4 border-black">
-      {/* Nếu người dùng đã đăng nhập, hiển thị username và ảnh */}
+      {/* Display username and profile picture if logged in */}
       {username ? (
         <div className="text-black flex flex-col items-center">
           <div className="flex items-center mb-4 mr-10">
-            {/* Hiển thị ảnh đại diện */}
             <img
-              src={profilePicture || "/assets/default-avatar.png"}  // Đảm bảo có ảnh mặc định nếu không có ảnh trong localStorage
+              src={profilePicture || "/assets/default-avatar.png"} // Default avatar if not in localStorage
               alt="Profile"
-              className="w-12 h-12 rounded-full mr-2"  // Thiết lập kích thước và hình tròn cho ảnh
+              className="w-12 h-12 rounded-full mr-2"
             />
-            {/* Hiển thị username */}
             <span className="text-lg font-lora font-bold">@{username}</span>
           </div>
-
-          {/* Nút Sign Out */}
           <button
             onClick={handleSignOut}
             className="text-blue-500 mt-2 hover:underline font-lora font-bold"
@@ -76,7 +90,7 @@ const SidebarMenu = () => {
         </div>
       ) : (
         <>
-          {/* Cụm Sign In / Sign Up */}
+          {/* Sign In / Sign Up Buttons */}
           <button
             onClick={openSignIn}
             className="mb-4 px-6 py-2 text-black font-bold bg-transparent border-2 border-transparent hover:bg-[#0B1D52] hover:text-white hover:border-[#0B1D52] rounded-full font-lora transition-all duration-300"
@@ -92,10 +106,9 @@ const SidebarMenu = () => {
         </>
       )}
 
-      {/* Đường kẻ ngăn cách giữa Sign In/Sign Up và các button còn lại */}
       <hr className="w-full my-4 border-gray-300 border-1.5" />
 
-      {/* Các button còn lại */}
+      {/* Other Buttons */}
       <button className="mt-3 mb-5 px-6 py-3 text-white font-bold bg-gradient-to-r from-yellow-400 to-red-500 rounded-full hover:from-yellow-500 hover:to-red-600 focus:outline-none font-lora transition-all duration-300">
         Premium
       </button>
@@ -107,8 +120,19 @@ const SidebarMenu = () => {
       </button>
 
       {/* Modals */}
-      <SignIn isOpen={isSignInOpen} close={closeSignIn} switchToSignUp={openSignUp} />
-      <SignUp isOpen={isSignUpOpen} close={closeSignUp} switchToSignIn={openSignIn} />
+      <SignIn
+        isOpen={isSignInOpen}
+        close={closeSignIn}
+        switchToSignUp={openSignUp}
+        switchToForgotPass={openForgotPass}
+      />
+      <SignUp
+        isOpen={isSignUpOpen}
+        close={closeSignUp}
+        switchToSignIn={openSignIn}
+      />
+      <ForgotPass isOpen={isForgotPassOpen} close={closeForgotPass} switchToChangePass = {openChangePass}  />
+      <ChangePassword isOpen={isChangePassOpen} close={closeChangePass}  switchToSignIn = {openSignIn}/>
     </div>
   );
 };

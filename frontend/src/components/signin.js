@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { login, googleAuth } from "../utils/api"; // Import googleAuth correctly
-import ForgotPass from './forgot-pass'; // Import ForgotPass component
 
-const SignIn = ({ isOpen, close, switchToSignUp }) => {
+const SignIn = ({ isOpen, close, switchToSignUp, switchToForgotPass }) => {
   const [email, setEmail] = useState(""); // Quản lý trạng thái cho email
   const [password, setPassword] = useState(""); // Quản lý trạng thái cho password
   const [showPassword, setShowPassword] = useState(false); // Ban đầu ẩn mật khẩu
   const [error, setError] = useState(null); // Xử lý lỗi
-  const [isForgotPassOpen, setIsForgotPassOpen] = useState(false); // Xử lý modal quên mật khẩu
 
   if (!isOpen) return null; // Nếu không mở thì không render gì cả
 
@@ -29,20 +27,24 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
     }
   };
   
-
-  const openForgotPass = () => {
-    setIsForgotPassOpen(true);
-  };
-
-  const closeForgotPass = () => {
-    setIsForgotPassOpen(false);
+  const handleGoogleLogin = async () => {
+    setError(null);
+    try {
+      const data = await googleAuth(); // Initiates Google login and waits for data
+      console.log(data.username, data.profilePicture, data.token);
+      localStorage.setItem("token", data.token); // Store JWT
+      localStorage.setItem("username", data.username); // Store user's name
+      localStorage.setItem("profilePicture", data.profilePicture); // Store profile picture
+      window.location.reload(); // Refresh the page to reflect logged-in state
+    } catch (err) {
+      setError(err.message || "Google login failed");
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-blue-900 text-white p-6 rounded-lg w-96">
-        {/* Hiển thị modal Sign In nếu Forgot Password không mở */}
-        {!isForgotPassOpen && (
+      
           <div>
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Sign In</h2>
@@ -87,7 +89,7 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
               </button>
 
               <div className="mt-4 text-center">
-                <a href="#" className="text-blue-300" onClick={openForgotPass}>
+                <a href="#" className="text-blue-300" onClick={switchToForgotPass}>
                   Forgot Password?
                 </a>
               </div>
@@ -109,7 +111,7 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
               <button
                 type="button"
                 className="w-full py-2 bg-white text-black font-semibold rounded-full flex items-center justify-center mt-4 border-2 border-gray-300 hover:bg-gray-100"
-                onClick={googleAuth} 
+                onClick={handleGoogleLogin} 
               >
                 <img
                   src="/assets/icons/google.svg"
@@ -120,11 +122,8 @@ const SignIn = ({ isOpen, close, switchToSignUp }) => {
               </button>
             </form>
           </div>
-        )}
-        
+      
         {/* Modals */}
-        <ForgotPass isOpen={isForgotPassOpen} close={closeForgotPass} switchToSignIn={switchToSignUp} />
-
       </div>
     </div>
   );

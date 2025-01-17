@@ -70,9 +70,19 @@ const getGoogleCallback = passport.authenticate("google", {
 const getGoogleCallbackJWT = (req, res) => {
   const token = jwt.sign(
     { userId: req.user._id, username: req.user.username },
-    "secretKey"
+    "MySuperSecretKey"
   );
-  return res.status(200).json({ token, userName: req.user.username });
+  const script = `
+      <script>
+        window.opener.postMessage(
+          ${JSON.stringify({ token: token, profilePicture: req.user.profilePicture, username: req.user.username })},
+          "http://localhost:3000"
+        );
+        window.close();
+      </script>
+    `;
+  console.log( token,req.user.profilePicture, req.user.username );
+    res.send(script);
 };
 
 const getSuccess = (req, res) => {
@@ -102,7 +112,7 @@ const handleForgotPassword = async (req, res) => {
       const user = await userService.checkEmail(email);
       if (user === false) {
         return res.status(400).json({
-          message: "User not found",
+          message: "This email is not registered",
         });
       }
   
@@ -161,9 +171,9 @@ const handleResetPassword = async (req,res) => {
             message: "User not found",
         });
         }
-
+        console.log("Email:", email, "OTP:", otp, "Password:", password);
         const user = await userService.checkOtp(email, otp);
-        
+        console.log("User:", user);
         if (user === null) {
         return res.status(400).json({
             message: "Invalid OTP",

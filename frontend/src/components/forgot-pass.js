@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { forgotPassword } from '../utils/api';
+import  changePassword  from './changePassword';
 
-const ForgotPass = ({ isOpen, close, switchToSignIn }) => {
+
+const ForgotPass = ({ isOpen, close, switchToChangePass }) => {
   const [email, setEmail] = useState(""); // Quản lý trạng thái cho email
   const [error, setError] = useState(null); // Xử lý lỗi
   const [message, setMessage] = useState(null); // Xử lý thông báo thành công
@@ -12,13 +15,13 @@ const ForgotPass = ({ isOpen, close, switchToSignIn }) => {
     setError(null);
     setMessage(null);
     try {
-      // Giả lập API gửi yêu cầu quên mật khẩu
-      // Gọi API để xử lý quên mật khẩu và gửi email
-      // await sendForgotPasswordRequest(email);
-
-      setMessage("A password reset link has been sent to your email!");
+      localStorage.clear();
+      localStorage.setItem("email", email);
+      await forgotPassword(email);
+      setMessage(`A password reset link has been sent to your email: ${email}`);
+      switchToChangePass();
     } catch (err) {
-      setError("Failed to send reset email");
+      setError(err.response.data.message || "Failed to send reset email");
     }
   };
 
