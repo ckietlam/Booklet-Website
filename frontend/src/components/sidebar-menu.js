@@ -70,24 +70,24 @@ const SidebarMenu = () => {
 
   return (
     <div className="flex flex-col items-center p-4 bg-white w-48.1 h-screen border-r-4 border-black">
-      {/* Display username and profile picture if logged in */}
-      {username ? (
-        <div className="text-black flex flex-col items-center">
-          <div className="flex items-center mb-4 mr-10">
-            <img
-              src={profilePicture || "/assets/default-avatar.png"} // Default avatar if not in localStorage
-              alt="Profile"
-              className="w-12 h-12 rounded-full mr-2"
-            />
-            <span className="text-lg font-lora font-bold">@{username}</span>
-          </div>
-          <button
-            onClick={handleSignOut}
-            className="text-blue-500 mt-2 hover:underline font-lora font-bold"
-          >
-            Sign Out
-          </button>
-        </div>
+          {/* Display username and profile picture if logged in */}
+          {username ? (
+            <div className="text-black flex flex-col items-center">
+      <div className="flex items-center mb-4 mr-10 whitespace-nowrap">
+        <img
+          src={profilePicture || "/assets/default-avatar.png"} // Default avatar if not in localStorage
+          alt="Profile"
+          className="w-12 h-12 rounded-full mr-2"
+        />
+        <span className="text-lg font-lora font-bold">@{username}</span>
+      </div>
+      <button
+        onClick={handleSignOut}
+        className="text-blue-500 mt-2 hover:underline font-lora font-bold"
+      >
+        Sign Out
+      </button>
+    </div>
       ) : (
         <>
           {/* Sign In / Sign Up Buttons */}

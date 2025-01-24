@@ -3,7 +3,7 @@ import Header from './header';  // Import Header component
 import Footer from './footer';  // Import Footer component
 import SidebarMenu from './sidebar-menu';  // Import SidebarMenu component
 
-const Layout = ({ children }) => {
+const SideLayout = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header /> {/* Header always shown */}
@@ -25,4 +25,4 @@ const Layout = ({ children }) => {
   );
 };
 
-export default Layout;
+export default SideLayout;

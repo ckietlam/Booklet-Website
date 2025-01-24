@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { signup } from '../utils/api';
+import { Link } from 'react-router-dom';
 
 const SignUp = ({ isOpen, close, switchToSignIn }) => {
   const [username, setUsername] = useState(""); // Quản lý trạng thái cho Username
@@ -99,7 +100,7 @@ const SignUp = ({ isOpen, close, switchToSignIn }) => {
 
           <div className="flex items-center mb-4">
             <input type="checkbox" className="mr-2" />
-            <span>Agree to the <a href="#" className="text-blue-300">Terms of Service</a></span>
+            <span>Agree to the <Link to="/terms" className="text-blue-300">Terms of Service</Link></span>
           </div>
 
           <button type="submit" className="w-full py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600 transition-all duration-300">
@@ -112,18 +113,6 @@ const SignUp = ({ isOpen, close, switchToSignIn }) => {
             </button>
           </div>
 
-          {/* Phần phân cách OR */}
-          <div className="flex items-center justify-center my-4">
-            <div className="w-full border-t border-gray-300"></div>
-            <span className="mx-4 text-gray-400">OR</span>
-            <div className="w-full border-t border-gray-300"></div>
-          </div>
-
-          {/* Nút "Sign Up With Google" */}
-          <button className="w-full py-2 bg-white text-black font-semibold rounded-full flex items-center justify-center mt-4 border-2 border-gray-300 hover:bg-gray-100">
-            <img src="/assets/icons/google.svg" alt="Google Logo" className="h-6 mr-2" />
-            Sign Up With Google
-          </button>  
         </form>
       </div>
     </div>
