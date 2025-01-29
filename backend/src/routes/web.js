@@ -17,8 +17,7 @@ const initWebRouters = (app) => {
     router.get('/isAuthenticated', verifyToken, user.getIsAuthenticated);
     router.post('/forgot-password', user.handleForgotPassword);
     router.post('/reset-password', user.handleResetPassword);
-
-
+    router.get('/change-profile', user.changeProfile);
   return app.use("/", router);
 };
 

@@ -1,4 +1,5 @@
 
+import formidable from "formidable";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import passport from "passport";
@@ -191,6 +192,36 @@ const handleResetPassword = async (req,res) => {
         });
     }
     }
+
+const changeProfile = async (req, res) => {
+  try {   
+    const {jwt, email, username, password, profilePicture} = req.body;
+    const form = new formidable.IncomingForm();
+    const user_ID = userService.verifyToken(jwt);
+    console.log("User_ID:", user_ID);
+    const user = await userService.changeProfile(user_ID, email, username, password, profilePicture);
+    res.status(200).json({ message: "Profile updated successfully" });
+    return user;
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/*
+Debugging
+const findUser = async (req, res) => {
+  try {
+    const {jwt} = req.body;
+    const user_ID = userService.verifyToken(jwt);
+    console.log("user_ID:", user_ID); 
+    const user = await userService.findUser(user_ID);
+    res.status(200).json({ message: "User found successfully", user: user });
+    console.log(user);
+    return user;
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}*/
 export default {
   postSignup,
   postLogin,
@@ -200,6 +231,6 @@ export default {
   getSuccess,
   getIsAuthenticated,
   handleForgotPassword,
-  handleResetPassword
-
+  handleResetPassword,
+  changeProfile,
 };
