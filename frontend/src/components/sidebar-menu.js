@@ -79,7 +79,9 @@ const SidebarMenu = () => {
           alt="Profile"
           className="w-12 h-12 rounded-full mr-2"
         />
-        <span className="text-lg font-lora font-bold">@{username}</span>
+        <Link to="/user-profile"  className="text-lg font-lora font-bold text-black hover:underline transition-all duration-300 cursor-pointer">
+          @{username || "Guest"}
+        </Link>
       </div>
       <button
         onClick={handleSignOut}

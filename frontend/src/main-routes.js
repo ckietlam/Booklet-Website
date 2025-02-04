@@ -8,6 +8,7 @@ import Privacy from './pages/privacy';
 import PaymentPolicy from './pages/paymentpolicy';
 import Help from './pages/help';
 import Accessibility from './pages/acessibility';
+import UserProfile from './features/user/pages/profile'; // Import Profile component
 
 const MainRoutes = () => {
   return (
@@ -19,6 +20,7 @@ const MainRoutes = () => {
         <Route path="/payment-policy" element={<MainLayout><PaymentPolicy /></MainLayout>} /> 
         <Route path="/help" element={<MainLayout><Help /></MainLayout>} />
         <Route path="/accessibility" element={<MainLayout><Accessibility /></MainLayout>} />
+        <Route path="/user-profile" element={<SideLayout><UserProfile /></SideLayout>} />
 
 
     </Routes>
