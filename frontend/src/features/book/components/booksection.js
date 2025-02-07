@@ -1,19 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 
 const BookCategory = ({ title, books }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const visibleBooks = 5; 
+
+  const nextBook = () => {
+    if (currentIndex < books.length - visibleBooks) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const prevBook = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-bold mb-4">{title}</h2>
-      <div className="overflow-x-auto scrollbar-hide">
-        <div className="flex gap-10">
-          {books.map((book, index) => (
-            <div key={index} className="flex flex-col items-center w-40 shrink-0">
-              <img src={book.image} alt={book.title} className="w-40 h-60 object-cover rounded-lg shadow-lg" />
-              <h3 className="text-sm font-semibold mt-2">{book.title}</h3>
-              <p className="text-xs text-gray-500">{book.author}</p>
+    <div className="mb-8 relative w-full max-w-[1200px] mx-auto">
+     
+      <h2 className="text-xl font-bold font-lora mb-4">{title}</h2>
+
+     
+      <div className="flex items-center justify-center gap-4">
+       
+        <button
+          onClick={prevBook}
+          className={`transition ${currentIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:opacity-80"}`}
+          disabled={currentIndex === 0}
+        >
+          <img src="/assets/icons/arrow-left.svg" alt="Previous" className="w-8 h-8" />
+        </button>
+
+       
+        <div className="flex gap-4">
+          {books.slice(currentIndex, currentIndex + visibleBooks).map((book, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center w-[15%] min-w-[180px] max-w-[240px] shrink-0"
+            >
+             
+              <img
+                src={book.image}
+                alt={book.title}
+                className="w-40 h-60 object-cover rounded-lg shadow-lg border-2 border-gray-400"
+              />
+              <h3 className="text-sm font-semibold font-lora mt-2 text-center">{book.title}</h3>
+              <p className="text-xs text-gray-500 text-center font-lora">{book.author}</p>
             </div>
           ))}
         </div>
+
+       
+        <button
+          onClick={nextBook}
+          className={`transition ${currentIndex >= books.length - visibleBooks ? "opacity-50 cursor-not-allowed" : "hover:opacity-80"}`}
+          disabled={currentIndex >= books.length - visibleBooks}
+        >
+          <img src="/assets/icons/arrow-right.svg" alt="Next" className="w-8 h-8" />
+        </button>
       </div>
     </div>
   );
@@ -23,66 +68,22 @@ const BookSection = () => {
   const bookCategories = [
     {
       title: "Trending Now",
-      books: [
-        {
-          title: "Dune",
-          author: "Frank Herbert",
-          image: "https://images-na.ssl-images-amazon.com/images/I/91%2B1rYKnGkL.jpg",
-        },
-        {
-          title: "The 48 Laws of Power",
-          author: "Robert Greene",
-          image: "https://images-na.ssl-images-amazon.com/images/I/71u6n6p5ECL.jpg",
-        },
-        {
-          title: "Influence: The Psychology of Persuasion",
-          author: "Robert B. Cialdini",
-          image: "https://images-na.ssl-images-amazon.com/images/I/81Zg%2B9D%2B2UL.jpg",
-        },
-        {
-          title: "The Alchemist",
-          author: "Paulo Coelho",
-          image: "https://images-na.ssl-images-amazon.com/images/I/81YOuOGFCJL.jpg",
-        },
-        {
-          title: "1984",
-          author: "George Orwell",
-          image: "https://images-na.ssl-images-amazon.com/images/I/71kxa1-0mfL.jpg",
-        },
-      ],
+      books: Array.from({ length: 10 }, (_, i) => ({
+        title: `Book Name #${i + 1}`,
+        author: `Author #${i + 1}`,
+        image: "https://nnpdev.wustl.edu/img/BookCovers/genericBookCover.jpg",
+      })),
     },
     {
       title: "Fiction",
-      books: [
-        {
-          title: "Brave New World",
-          author: "Aldous Huxley",
-          image: "https://images-na.ssl-images-amazon.com/images/I/81r07rNAB8L.jpg",
-        },
-        {
-          title: "The Catcher in the Rye",
-          author: "J.D. Salinger",
-          image: "https://images-na.ssl-images-amazon.com/images/I/81OthjkJBuL.jpg",
-        },
-        {
-          title: "To Kill a Mockingbird",
-          author: "Harper Lee",
-          image: "https://images-na.ssl-images-amazon.com/images/I/81OxW1-W7UL.jpg",
-        },
-        {
-          title: "The Great Gatsby",
-          author: "F. Scott Fitzgerald",
-          image: "https://images-na.ssl-images-amazon.com/images/I/71V2A5MMxVL.jpg",
-        },
-        {
-          title: "Moby-Dick",
-          author: "Herman Melville",
-          image: "https://images-na.ssl-images-amazon.com/images/I/81pyqaEIzZL.jpg",
-        },
-      ],
+      books: Array.from({ length: 10 }, (_, i) => ({
+        title: `Book Name #${i + 11}`,
+        author: `Author #${i + 11}`,
+        image: "https://nnpdev.wustl.edu/img/BookCovers/genericBookCover.jpg",
+      })),
     },
   ];
-  
+
   return (
     <div className="p-4">
       {bookCategories.map((category, index) => (
