@@ -69,7 +69,7 @@ const SidebarMenu = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-4 bg-white w-48.1 h-screen border-r-4 border-black">
+    <div className="flex flex-col items-center p-4 bg-white w-48.1 h-full border-r-4 border-black">
           {/* Display username and profile picture if logged in */}
           {username ? (
             <div className="text-black flex flex-col items-center">

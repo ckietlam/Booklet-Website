@@ -3,15 +3,15 @@ import { signup } from '../utils/api';
 import { Link } from 'react-router-dom';
 
 const SignUp = ({ isOpen, close, switchToSignIn }) => {
-  const [username, setUsername] = useState(""); // Quản lý trạng thái cho Username
-  const [email, setEmail] = useState(""); // Quản lý trạng thái cho Email
-  const [password, setPassword] = useState(""); // Quản lý trạng thái cho Password
-  const [confirmPassword, setConfirmPassword] = useState(""); // Quản lý trạng thái cho Confirm Password
-  const [showPassword, setShowPassword] = useState(false); // Ban đầu ẩn mật khẩu
+  const [username, setUsername] = useState(""); 
+  const [email, setEmail] = useState(""); 
+  const [password, setPassword] = useState(""); 
+  const [confirmPassword, setConfirmPassword] = useState(""); 
+  const [showPassword, setShowPassword] = useState(false); 
   const [error, setError] = useState(""); // Quản lý thông báo lỗi khi mật khẩu không khớp
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);  // Đổi trạng thái khi nhấn vào icon
+    setShowPassword(!showPassword);  
   };
 
   const handleSignUp = async (e) => {
@@ -31,7 +31,7 @@ const SignUp = ({ isOpen, close, switchToSignIn }) => {
     }
   };
 
-  if (!isOpen) return null;  // Nếu không mở thì không render gì cả
+  if (!isOpen) return null;  
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
